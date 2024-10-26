@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    extends:
+      file: common-config.yaml
+      service: microservice-mongo-config
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yaml
+      service: network-deploy-service
+
+#  task:
+#    container_name: task
+#    image: victortarasov/agency-amazon-task:v1
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/your_database_name
+#    extends:
+#        file: common-config.yaml
+#        service: network-deploy-service
+networks:
+  executor:
+    driver: "bridge"
+    external: true

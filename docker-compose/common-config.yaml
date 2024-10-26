@@ -1,0 +1,23 @@
+services:
+  network-deploy-service:
+    networks:
+      - executor
+  microservice-base-config:
+    extends:
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+  microservice-mongo-config:
+    extends:
+      service: network-deploy-service
+    image: mongodb/mongodb-community-server:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "mongo --eval 'db.runCommand({ ping: 1 })'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "27017:27017"
