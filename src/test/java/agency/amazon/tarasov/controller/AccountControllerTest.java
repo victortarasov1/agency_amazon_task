@@ -2,7 +2,7 @@ package agency.amazon.tarasov.controller;
 
 import agency.amazon.tarasov.dto.AccountWithPasswordDto;
 import agency.amazon.tarasov.model.Account;
-import agency.amazon.tarasov.repository.AccountRepository;
+import agency.amazon.tarasov.service.account.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -33,7 +31,7 @@ class AccountControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private AccountRepository repository;
+    private AccountService service;
 
 
     @Autowired
@@ -42,7 +40,7 @@ class AccountControllerTest {
     void testAdd() throws Exception {
         var dto = new AccountWithPasswordDto("some email", "some password", "some name", "some surname");
 
-        when(repository.findById(anyString())).thenReturn(Optional.empty());
+        when(service.get(anyString())).thenReturn(dto.mapAccount());
 
         mockMvc.perform(post("/account/add")
                 .contentType(APPLICATION_JSON)
@@ -54,7 +52,7 @@ class AccountControllerTest {
     void testGet() throws Exception {
         var account = new Account("test@example.com", "password", "some name", "some surname");
 
-        when(repository.findById("test@example.com")).thenReturn(Optional.of(account));
+        when(service.get("test@example.com")).thenReturn(account);
 
         mockMvc.perform(get("/account/get"))
                 .andExpect(status().isOk())
@@ -74,7 +72,7 @@ class AccountControllerTest {
         var dto = new AccountWithPasswordDto("test@example.com", "some password", "some name", "some surname");
         var account = dto.mapAccount();
 
-        when(repository.findById(anyString())).thenReturn(Optional.of(account));
+        when(service.get(anyString())).thenReturn(account);
 
         mockMvc.perform(put("/account/update")
                         .contentType(APPLICATION_JSON)
