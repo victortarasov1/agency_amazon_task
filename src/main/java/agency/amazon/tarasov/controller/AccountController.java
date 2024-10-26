@@ -1,7 +1,7 @@
 package agency.amazon.tarasov.controller;
 
 import agency.amazon.tarasov.dto.AccountDto;
-import agency.amazon.tarasov.model.Account;
+import agency.amazon.tarasov.dto.AccountWithPasswordDto;
 import agency.amazon.tarasov.service.account.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,14 +20,14 @@ public class AccountController {
 
     @ResponseStatus(CREATED)
     @PostMapping("/add")
-    public void add(@RequestBody Account account) {
-        service.add(account);
+    public void add(@RequestBody AccountWithPasswordDto dto) {
+        service.add(dto.mapAccount());
     }
 
     @GetMapping("/get")
     @PreAuthorize("hasRole('ROLE_USER')")
     public AccountDto get(Principal principal) {
-        return service.get(principal.getName());
+        return new AccountDto(service.get(principal.getName()));
     }
 
     @DeleteMapping("/delete")
@@ -38,7 +38,7 @@ public class AccountController {
 
     @PutMapping("/update")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void update(Principal principal, @RequestBody Account account) {
-        service.update(principal.getName(), account);
+    public void update(Principal principal, @RequestBody AccountWithPasswordDto dto) {
+        service.update(principal.getName(), dto.mapAccount());
     }
 }

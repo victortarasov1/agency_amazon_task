@@ -43,8 +43,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Cacheable(value = "accountCache", key = "#email")
-    public AccountDto get(String email) {
-        return repository.findById(email).map(AccountDto::new).orElseThrow(() -> new AccountNotFoundException(email));
+    public Account get(String email) {
+        return repository.findById(email).orElseThrow(() -> new AccountNotFoundException(email));
     }
 
 

@@ -25,6 +25,14 @@ public class Account implements UserDetails {
     private String password;
 
     private List<Role> roles = List.of(ROLE_USER);
+
+    public Account(String email, String password, String name, String surname) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(Role::toString).map(SimpleGrantedAuthority::new).toList();

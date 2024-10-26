@@ -1,6 +1,5 @@
 package agency.amazon.tarasov.service.account;
 
-import agency.amazon.tarasov.dto.AccountDto;
 import agency.amazon.tarasov.exception.AccountAlreadyExistException;
 import agency.amazon.tarasov.exception.AccountNotFoundException;
 import agency.amazon.tarasov.model.Account;
@@ -8,7 +7,6 @@ import agency.amazon.tarasov.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 
 import java.util.Optional;
 
@@ -69,13 +67,12 @@ class AccountServiceImplTest {
     public void testGet() {
         var account = new Account();
         account.setEmail("some email");
-        var expected = new AccountDto(account);
 
         when(repository.findById(anyString())).thenReturn(Optional.of(account));
 
         var result = accountService.get("some email");
 
-        assertThat(result).isEqualTo(expected);
+        assertThat(result).isEqualTo(account);
         verify(repository, times(1)).findById(anyString());
 
     }
