@@ -21,6 +21,6 @@ jwt:
   secret:
     key: secret
   access_token:
-    time: 60
-  refresh_token:
     time: 300
+  refresh_token:
+    time: 1500

@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import static agency.amazon.tarasov.constant.Constants.*;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Component
 @RequiredArgsConstructor
@@ -50,14 +51,14 @@ public class TokenProviderImpl implements TokenProvider {
     private String generateRefreshToken(UserDetails user) {
         var instant = Instant.now();
         return JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(instant.plus(holder.getRefreshTokenTime(), ChronoUnit.MINUTES))
+                .withExpiresAt(instant.plus(holder.getRefreshTokenTime(), SECONDS))
                 .sign(algorithm);
     }
 
     private String generateAccessToken(UserDetails user) {
         var instant = Instant.now();
         return JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(instant.plus(holder.getAccessTokenTime(), ChronoUnit.MINUTES))
+                .withExpiresAt(instant.plus(holder.getAccessTokenTime(), SECONDS))
                 .withClaim(ROLES_TOKEN_CLAIM, user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).toList()).sign(algorithm);
     }
